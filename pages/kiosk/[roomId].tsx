@@ -92,10 +92,11 @@ export default function Kiosk() {
       gain.connect(ctx.destination);
       osc.start();
       setTimeout(() => osc.stop(), 1200);
-      if ('vibrate' in navigator) {
-        // @ts-expect-error: algunos navegadores no tipan vibrate
-        navigator.vibrate?.(400);
-      }
+      // Vibración opcional, con tipado seguro
+const nav = navigator as Navigator & { vibrate?: (pattern: number | number[]) => boolean };
+if (typeof nav.vibrate === 'function') {
+  nav.vibrate(400);
+}
     } catch {
       // sin audio
     }
